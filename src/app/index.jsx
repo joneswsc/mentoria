@@ -8,12 +8,17 @@ import { useStrict } from 'mobx';
 import { Provider } from 'mobx-react';
 
 import 'jquery';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/index.scss';
+/*
+import './bootstrap/dist/css/bootstrap.min.css';
+import './bootstrap/dist/css/sb-admin-2.css';
+import './bootstrap/dist/css/font-awesome.min.css';
+import './bootstrap/dist/js/bootstrap.min.js';
+import './bootstrap/dist/js/sb-admin-2.js';
+*/
 
 import App from './containers/app';
 import Aposentadoria from './components/aposentadoria';
-
 import AposentadoriaStore from './stores/aposentadoriaStore';
 
 const ELEMENT_TO_BOOTSTRAP = 'root';
