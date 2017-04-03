@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react';
 import React from 'react';
 import CurrencyInput from 'react-currency-input';
+import autobind from 'autobind-decorator';
 
 @observer(['aposentadoria'])
 class Aposentadoria extends React.Component {
@@ -16,24 +17,29 @@ class Aposentadoria extends React.Component {
   }
 
   handleChange(e) {
-
     this.props.aposentadoria.calcular({
-        taxaRentabilidade: this.taxaRentabilidade.value ,
-        inflacao: this.inflacao.value,
-        idadeAposentadoria: this.idadeAposentadoria.value,
-        idadeAtual: this.idadeAtual.value,
-        aporteInicial: this.aporteInicial.value,
-        depositoMensal: this.depositoMensal.value,
+        taxaRentabilidade: this.taxaRentabilidade.state.value ,
+        inflacao: this.inflacao.state.value,
+        idadeAposentadoria: this.idadeAposentadoria.state.value,
+        idadeAtual: this.idadeAtual.state.value,
+        aporteInicial: this.aporteInicial.state.value,
+        depositoMensal: this.depositoMensal.state.value,
       });
     e.preventDefault();
   }
 
   handleIdade(e) {
-    this.tempoContribuicao.value = parseInt(this.idadeAposentadoria.value) - parseInt(this.idadeAtual.value);
+    console.log(parseInt(this.idadeAposentadoria.state.value) - parseInt(this.idadeAtual.state.value));
+    console.log("tempoContribuicao:" + this.tempoContribuicao.state.value);
+    this.tempoContribuicao.state.value = parseInt(this.idadeAposentadoria.state.value) - parseInt(this.idadeAtual.state.value);
+    /*this.props.aposentadoria.updateControls({ tempoContribuicao: this.tempoContribuicao.state.value })*/
   }
 
+
   handleTempo(e) {
-    this.idadeAposentadoria.value = parseInt(this.idadeAtual.value) + parseInt(this.tempoContribuicao.value);
+    console.log(parseInt(this.idadeAtual.state.value) + parseInt(this.tempoContribuicao.state.value));
+    console.log("idadeAposentadoria:" + this.idadeAposentadoria.state.value) ;
+    this.idadeAposentadoria.state.value = parseInt(this.idadeAtual.state.value) + parseInt(this.tempoContribuicao.state.value);
   }
 
   render() {
@@ -52,35 +58,35 @@ class Aposentadoria extends React.Component {
                     <form role="form" onSubmit={this.handleChange}>
                       <div className="form-group">
                         <label htmlFor="idadeAtual">Idade atual:</label>
-                        <input className="form-control"  ref={ref=>(this.idadeAtual=ref)} defaultValue="48"/>
+                        <CurrencyInput className="form-control" placeholder="Informe a sua idade atual" type="text" ref={ref=>(this.idadeAtual=ref)} value='48' precision='0'/>
                       </div>
                       <div className="form-group">
                         <label htmlFor="aporteInicial">Aporte Inicial:</label>
-                        <input className="form-control" type="text"  ref={ref=>(this.aporteInicial=ref)}  defaultValue="100000"/>
+                        <CurrencyInput prefix="R$" className="form-control" decimalSeparator="," thousandSeparator="."  placeholder="Informe quanto pretende investir agora"  type="text"  ref={ref=>(this.aporteInicial=ref)} value='100000' precision='0'/>
                       </div>
                       <div className="form-group">
                         <label htmlFor="depositoMensal">Deposito mensal:</label>
-                        <input className="form-control" type="text"  ref={ref=>(this.depositoMensal=ref)}  defaultValue="1000"/>
+                        <CurrencyInput  prefix="R$" className="form-control" placeholder="Informe quanto pretende investir mensalmente" type="text"  ref={ref=>(this.depositoMensal=ref)}  value='1000' precision='0'/>
                       </div>
                       <div className="form-group">
                         <label htmlFor="taxaRentabilidade">Taxa de rentabilidade anual (%):</label>
-                        <input className="form-control" type="text"  ref={ref=>(this.taxaRentabilidade=ref)} defaultValue="10"/>
+                        <CurrencyInput className="form-control" suffix="%"  type="text" placeholder="Informe qual é a rentabilidade projetada"  ref={ref=>(this.taxaRentabilidade=ref)} value='10' precision='0'/>
                       </div>
                       <div className="form-group">
                         <label htmlFor="inflacao">Inflacao anual:</label>
-                        <input className="form-control" type="text"  ref={ref=>(this.inflacao=ref)}  defaultValue="5"/>
+                        <CurrencyInput className="form-control" suffix="%" type="text" placeholder="Informe qual é a inflação futura projetada" ref={ref=>(this.inflacao=ref)}  value='5' precision='0'/>
                       </div>
                       <div className="form-group">
-                        <label htmlFor="idadeAposentadoria1">Idade que pretende aposentar:</label>
-                        <input className="form-control" type="text"  onBlur={this.handleIdade} ref={ref=>(this.idadeAposentadoria=ref)} defaultValue="65"/>
+                        <label htmlFor="idadeAposentadoria">Idade que pretende aposentar:</label>
+                        <CurrencyInput className="form-control" type="text"   placeholder="Informe a idade que pretende aposentar" onChange={this.handleIdade} ref={ref=>(this.idadeAposentadoria=ref)} value='65' precision='0'/>
                       </div>
                       <div className="form-group">
-                        <label htmlFor="tempoContribuicao1">Tempo de contribuicao (anos):</label>
-                        <input className="form-control" type="text"  onBlur={this.handleTempo} ref={ref=>(this.tempoContribuicao=ref)}  defaultValue="17"/>
+                        <label htmlFor="tempoContribuicao">Tempo de investimento (anos):</label>
+                        <CurrencyInput className="form-control" type="text"  placeholder="Informe quantos anos pretende investir" onChange={this.handleTempo} ref={ref=>(this.tempoContribuicao=ref)}  value='17' precision='0'/>
                       </div>
                       <div className="form-group">
                         <label htmlFor="saqueMensal">Retirada mensal apos aposentadoria:</label>
-                        <input className="form-control" type="text"  ref={ref=>(this.saqueMensal=ref)} defaultValue="2000"/>
+                        <CurrencyInput  prefix="R$" className="form-control" type="text"  placeholder="Informe quanto pretende retirar apos data de aposentadoria" ref={ref=>(this.saqueMensal=ref)} value='2000' precision='0'/>
                       </div>
                       <div className="form-group">
                         <label for="disabledSelect">Saldo estimado na data da aposentadoria: </label>
